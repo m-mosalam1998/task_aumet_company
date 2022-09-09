@@ -1,15 +1,21 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:task_company/controller/dataBase/auth.dart';
+import 'package:task_company/controller/providers.dart';
 import 'package:task_company/controller/validate_controll_text_filed.dart';
 import 'package:task_company/global/colors.dart';
 import 'package:task_company/global/values.dart';
-import 'package:task_company/model/user.dart';
 import 'package:task_company/view/widget/button.dart';
+import 'package:task_company/view/widget/dialog.dart';
 import 'package:task_company/view/widget/text_field.dart';
 import 'package:task_company/view/widget/user_picture.dart';
+
+import 'check_email_validation.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -97,29 +103,34 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-              CustomButton(
-                  text: 'Login',
-                  onTap: () async {
-                    if (_textFieldValidate.formKeyLogin.currentState!
-                        .validate()) {
-                      _textFieldValidate.formKeyLogin.currentState!.save();
-                      await showDialog(
-                        context: context,
-                        builder: (context) => FutureProgressDialog(
-                          FirebaseAuthuntication().signInWithEmail(
-                              context: context,
-                              email: _textFieldValidate.emailController.text
-                                  .trim()),
-                        ),
-                      );
-                      User _user = User(
-                          name: _textFieldValidate.nameController.text,
-                          email: _textFieldValidate.emailController.text.trim(),
-                          phoneNumber:
-                              _textFieldValidate.phoneController.text.trim(),
-                          imageUrl: imageUrl);
-                    }
-                  }),
+              Consumer(
+                builder: (context, ref, child) {
+                  return CustomButton(
+                      text: 'Login',
+                      onTap: () async {
+                        if (_textFieldValidate.formKeyLogin.currentState!
+                            .validate()) {
+                          _textFieldValidate.formKeyLogin.currentState!.save();
+                          bool checkValue = false;
+                          Dialoges().loadingDialod(context: context);
+                          bool check =
+                              await FirebaseAuthuntication().signInWithEmail(
+                            context: context,
+                            email:
+                                _textFieldValidate.emailController.text.trim(),
+                            image: ref.read(userPictureProvider),
+                            name: _textFieldValidate.nameController.text,
+                            phoneNumber:
+                                _textFieldValidate.phoneController.text,
+                          );
+                          if (check) {
+                            Navigator.pop(context);
+                            Navigator.popAndPushNamed(context, '/home');
+                          }
+                        }
+                      });
+                },
+              ),
             ],
           ),
         ),
