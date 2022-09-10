@@ -8,10 +8,15 @@ class TextFieldValidateAndController {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
   // text validation
   String emptyName = 'Name is requird';
   String emptyEmail = 'Email is requird';
   String emptyPhone = 'phone is requird';
+  String emptyPass = 'Password is requird';
+  String emptyConfiremPass = 'Confirem password is requird';
   String errorEmail = 'Wrong email ,please enter valid email';
   String errorPhone = 'Wrong phone number ,please enter valid phone number';
 
@@ -42,6 +47,24 @@ class TextFieldValidateAndController {
   String? isName(String? value) {
     if (value?.isEmpty ?? true) {
       return emptyName;
+    }
+    return null;
+  }
+
+  String? isPass(String? value) {
+    if (value?.isEmpty ?? true) {
+      return emptyPass;
+    } else if (value!.trim().length < 9) {
+      return "error password";
+    }
+    return null;
+  }
+
+  String? isEqualPass(String? value, String pass) {
+    if (value?.isEmpty ?? true) {
+      return emptyConfiremPass;
+    } else if (!validators.equals(value, pass)) {
+      return 'password not equal';
     }
     return null;
   }

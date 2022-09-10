@@ -10,4 +10,7 @@ class AppColors {
   static Color errorBorderTextField = Colors.red;
   // for button
   static Color buttonColor = Colors.blue;
+  // card unversit
+  static Color bodyCardColor = const Color.fromARGB(255, 227, 226, 226);
+  static Color borderCardColor = const Color.fromARGB(255, 114, 112, 112);
 }

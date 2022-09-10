@@ -37,8 +37,8 @@ dependencies:
   # icons
   line_icons: ^2.0.1
   cupertino_icons: ^1.0.2
-  # loading
-  future_progress_dialog: ^0.2.0
+  # move from login and sinup
+  card_swiper: ^2.0.4
 
 
 dev_dependencies:

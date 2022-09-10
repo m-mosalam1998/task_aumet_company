@@ -12,14 +12,20 @@ class TitleWithField extends StatelessWidget {
       required this.formater,
       required this.textController,
       this.suffixIcon,
+      this.onChange,
+      this.widthTitle,
+      this.helperText,
       this.disableMaxLen = true})
       : super(key: key);
   final String title;
   final String? Function(String?)? validator;
   final TextInputType? textInputType;
   final List<TextInputFormatter>? formater;
+  final Function(String? value)? onChange;
   final Widget? suffixIcon;
   final bool disableMaxLen;
+  final double? widthTitle;
+  final String? helperText;
   final TextEditingController textController;
   @override
   Widget build(BuildContext context) {
@@ -30,7 +36,7 @@ class TitleWithField extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SizedBox(
-            width: 100,
+            width: widthTitle ?? 100,
             child: Text(
               title,
               style: TextStyle(
@@ -56,6 +62,7 @@ class TitleWithField extends StatelessWidget {
                 maxLength: disableMaxLen ? null : 10,
                 inputFormatters: formater,
                 decoration: InputDecoration(
+                  helperText: helperText ?? null,
                   hintText: title,
                   hintStyle: TextStyle(
                     fontFamily: GlobalValues.fontFamily,
@@ -78,6 +85,7 @@ class TitleWithField extends StatelessWidget {
                   focusedErrorBorder: defaultBorder(),
                 ),
                 validator: validator,
+                onChanged: onChange,
               ),
             ),
           ),

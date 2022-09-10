@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pagination_view/pagination_view.dart';
-import 'package:task_company/controller/api.dart';
-import 'package:task_company/model/university.dart';
-import 'package:task_company/view/widget/button.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:task_company/controller/providers.dart';
+import 'package:task_company/global/colors.dart';
+import 'package:task_company/global/values.dart';
+import 'package:task_company/view/components/pagination.dart';
 
 class HomePage extends StatelessWidget {
   HomePage({Key? key}) : super(key: key);
@@ -12,15 +13,38 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            CustomButton(
-              onTap: () {
-                ApiUnversity().fetchdata(country: 'jordan');
-              },
-              text: 'tap',
-            )
-          ],
+        child: Center(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: [
+                Consumer(builder: (_, ref, child) {
+                  final countrySelected = ref.watch(selectedUnversity);
+                  return DropdownButton(
+                      items: countries
+                          .map((e) => DropdownMenuItem(
+                                value: e,
+                                child: Text(
+                                  e,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.textAndIconColor,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: GlobalValues.fontFamily,
+                                  ),
+                                ),
+                              ))
+                          .toList(),
+                      value: countrySelected,
+                      onChanged: (String? item) {
+                        ref.read(selectedUnversity.notifier).state = item!;
+                        // ref.read(universitys.);
+                      });
+                }),
+                Expanded(child: PaginationUnversity()),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:future_progress_dialog/future_progress_dialog.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:task_company/controller/dataBase/auth.dart';
 import 'package:task_company/controller/providers.dart';
@@ -13,18 +12,16 @@ import 'package:task_company/global/values.dart';
 import 'package:task_company/view/widget/button.dart';
 import 'package:task_company/view/widget/dialog.dart';
 import 'package:task_company/view/widget/text_field.dart';
-import 'package:task_company/view/widget/user_picture.dart';
+import 'package:task_company/view/components/user_picture_upload.dart';
 
-import 'check_email_validation.dart';
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   final TextFieldValidateAndController _textFieldValidate =
       TextFieldValidateAndController();
 
@@ -44,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        'Login',
+                        'Sign Up',
                         style: TextStyle(
                           fontSize: 20,
                           color: AppColors.textAndIconColor,
@@ -103,6 +100,35 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
+
+              // password
+              TitleWithField(
+                textController: _textFieldValidate.passwordController,
+                title: "password",
+                validator: _textFieldValidate.isPass,
+                helperText: 'Password must be at lest 10 characters',
+                // suffixIcon: Icon(
+                //   LineIcons.googleLogo,
+                //   color: AppColors.textAndIconColor,
+                // ),
+                formater: [
+                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                ],
+                textInputType: TextInputType.emailAddress,
+              ),
+              // confierm password
+              TitleWithField(
+                textController: _textFieldValidate.confirmPasswordController,
+                title: "Confirem password",
+                validator: (text) => _textFieldValidate.isEqualPass(
+                    text, _textFieldValidate.passwordController.text),
+                formater: [
+                  FilteringTextInputFormatter.allow(RegExp("[a-zA-Z0-9]")),
+                ],
+                textInputType: TextInputType.phone,
+                disableMaxLen: false,
+              ),
+
               Consumer(
                 builder: (context, ref, child) {
                   return CustomButton(
@@ -111,13 +137,17 @@ class _LoginPageState extends State<LoginPage> {
                         if (_textFieldValidate.formKeyLogin.currentState!
                             .validate()) {
                           _textFieldValidate.formKeyLogin.currentState!.save();
-                          bool checkValue = false;
                           Dialoges().loadingDialod(context: context);
                           bool check =
                               await FirebaseAuthuntication().signInWithEmail(
                             context: context,
+                            userDataClass: (value) {
+                              ref.read(userAccount.notifier).state = value;
+                            },
                             email:
                                 _textFieldValidate.emailController.text.trim(),
+                            pass: _textFieldValidate.passwordController.text
+                                .trim(),
                             image: ref.read(userPictureProvider),
                             name: _textFieldValidate.nameController.text,
                             phoneNumber:
@@ -131,6 +161,36 @@ class _LoginPageState extends State<LoginPage> {
                       });
                 },
               ),
+              Consumer(builder: (_, ref, child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Have Account ? ",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textAndIconColor,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GlobalValues.fontFamily,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        ref.read(swiperController.notifier).state.move(0);
+                      },
+                      child: Text(
+                        'LogIn',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.buttonColor,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GlobalValues.fontFamily,
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              }),
             ],
           ),
         ),

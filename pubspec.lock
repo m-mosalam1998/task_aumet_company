@@ -29,6 +29,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
+  card_swiper:
+    dependency: "direct main"
+    description:
+      name: card_swiper
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.4"
   characters:
     dependency: transitive
     description:
@@ -233,13 +240,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  future_progress_dialog:
-    dependency: "direct main"
-    description:
-      name: future_progress_dialog
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   http:
     dependency: transitive
     description:

@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:task_company/routes.dart';
 import 'package:task_company/view/pages/check_email_validation.dart';
-import 'package:task_company/view/pages/login_page.dart';
+import 'package:task_company/view/components/registration_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,7 +31,7 @@ class TaskAumet extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: Routs().routs,
-      initialRoute: '/home',
+      initialRoute: '/registration',
     );
   }
 }
